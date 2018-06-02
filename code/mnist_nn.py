@@ -123,9 +123,13 @@ if train_model:
         print("step %d, training accuracy %g"%(i, train_accuracy))
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.45})
 
-    print("test accuracy %g"%accuracy.eval(feed_dict={
-        x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
-
+    # print("test accuracy %g"%accuracy.eval(feed_dict={
+    #     x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+    
+    #https://stackoverflow.com/questions/39076388/tensorflow-deep-mnist-resource-exhausted-oom-when-allocating-tensor-with-shape?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    for i in range(10):
+        testSet = mnist.test.next_batch(50)
+        print("test accuracy %g"%accuracy.eval(feed_dict={ x: testSet[0], y_: testSet[1], keep_prob: 1.0}))
     #test accuracy 0.9918
 
     #saving the nn
