@@ -70,11 +70,19 @@ b_conv2 = bias_variable([64]) #biases for conv2
 h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2)+b_conv2) #output from conv layer1
 h_pool2 = max_pool_2x2(h_conv2) #max pool2
 
-W_fc1 = weight_variable([7*7*64, 1024])
+#NOTE: convolutional layer 2 on 5x5 pixels with 32 input and 64 output features
+W_conv3 = weight_variable([5,5,64,128])  #weights for conv2
+b_conv3 = bias_variable([128]) #biases for conv2
+
+h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3)+b_conv3) #output from conv layer1
+h_pool3 = max_pool_2x2(h_conv3) #max pool2
+
+W_fc1 = weight_variable([4*4*128, 1024])
 b_fc1 = bias_variable([1024])
 
-h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
-h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1)+b_fc1)
+print(h_pool2.shape, h_pool3.shape)
+h_pool3_flat = tf.reshape(h_pool3, [-1, 4*4*128])
+h_fc1 = tf.nn.relu(tf.matmul(h_pool3_flat, W_fc1)+b_fc1)
 
 
 keep_prob = tf.placeholder(tf.float32)
@@ -115,12 +123,21 @@ if train_model:
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
     #training the model
-    for i in range(40750):
+    for i in range(42000):
       batch = mnist.train.next_batch(50)
-      if i%100 == 0:
+      if i%1000 == 0:
         train_accuracy = accuracy.eval(feed_dict={
             x:batch[0], y_: batch[1], keep_prob: 1.0})
         print("step %d, training accuracy %g"%(i, train_accuracy))
+      if i%10000 == 0:
+        accuracies = []
+        for i in range(2327):
+            testSet = mnist.test.next_batch(50)
+            accu = accuracy.eval(feed_dict={ x: testSet[0], y_: testSet[1], keep_prob: 1.0})
+            #print("test accuracy %g"%accu)
+            accuracies.append(accu)
+        
+        print('Total accuracy: {}'.format(str(sum(accuracies)/len(accuracies))))
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.45})
 
     # print("test accuracy %g"%accuracy.eval(feed_dict={
@@ -134,7 +151,7 @@ if train_model:
 
     #saving the nn
     saver = tf.train.Saver()
-    save_path = saver.save(sess, "./model/model.ckpt")
+    save_path = saver.save(sess, "./model/model_62/model_2/model.ckpt")
     print("Model saved in file: %s" % save_path)
     sess.close()
 
@@ -144,23 +161,36 @@ else:
     #restore
     with tf.Session() as sess:
         # Restore variables from disk.
-        saver.restore(sess, "./model/model.ckpt")
+        saver.restore(sess, "./model/model_62/model.ckpt")
         print("Model restored.")
+        #NOTE Downloading the dataset
+        print("Extracting data from yann.lecun.com/exdb/mnist/")
+        from mnist import read_data_sets
+        mnist = read_data_sets("MNIST_data/", one_hot=True)
+        print("Data extracted")
+        accuracies = []
+        for i in range(2327):
+            testSet = mnist.test.next_batch(50)
+            accu = accuracy.eval(feed_dict={ x: testSet[0], y_: testSet[1], keep_prob: 1.0})
+            print("test accuracy %g"%accu)
+            accuracies.append(accu)
+        
+        print('Total accuracy: {}'.format(str(sum(accuracies)/len(accuracies))))
+        #test accuracy 0.9918
+        # predict = tf.argmax(y_conv,1)
+        # # read test data from CSV file
+        # test_images = pd.read_csv('./data/test.csv').values
+        # test_images = test_images.astype(np.float)
+        # print('test_images({0[0]},{0[1]})'.format(test_images.shape))
+        # # using batches is more resource efficient
+        # predicted_lables = np.zeros(test_images.shape[0])
+        # for i in range(0,test_images.shape[0]//100):
+        #     predicted_lables[i*100 : (i+1)*100] = predict.eval(feed_dict={x: test_images[i*100 : (i+1)*100],keep_prob: 1.0})
 
-        predict = tf.argmax(y_conv,1)
-        # read test data from CSV file
-        test_images = pd.read_csv('./data/test.csv').values
-        test_images = test_images.astype(np.float)
-        print('test_images({0[0]},{0[1]})'.format(test_images.shape))
-        # using batches is more resource efficient
-        predicted_lables = np.zeros(test_images.shape[0])
-        for i in range(0,test_images.shape[0]//100):
-            predicted_lables[i*100 : (i+1)*100] = predict.eval(feed_dict={x: test_images[i*100 : (i+1)*100],keep_prob: 1.0})
+        # print('predicted_lables({0})'.format(len(predicted_lables)))
 
-        print('predicted_lables({0})'.format(len(predicted_lables)))
-
-        # save results
-        np.savetxt('submission_softmax.csv',np.c_[range(1,len(test_images)+1),predicted_lables], delimiter=',', header = 'ImageId,Label', comments = '', fmt='%d')
+        # # save results
+        # np.savetxt('submission_softmax.csv',np.c_[range(1,len(test_images)+1),predicted_lables], delimiter=',', header = 'ImageId,Label', comments = '', fmt='%d')
 
 
 
