@@ -14,7 +14,7 @@ else:
 
 #NOTE Variable declaration
 x = tf.placeholder(tf.float32,[None, 784]) #variable for features
-y_ = tf.placeholder(tf.float32, [None, 10]) #variable for labels
+y_ = tf.placeholder(tf.float32, [None, 62]) #variable for labels
 
 
 #NOTE function declaration to genrate Weight/bias variables
@@ -81,8 +81,8 @@ keep_prob = tf.placeholder(tf.float32)
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 
-W_fc2 = weight_variable([1024, 10])
-b_fc2 = bias_variable([10])
+W_fc2 = weight_variable([1024, 62])
+b_fc2 = bias_variable([62])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
@@ -107,15 +107,15 @@ if train_model:
     '''
     #NOTE Downloading the dataset
     print("Extracting data from yann.lecun.com/exdb/mnist/")
-    from tensorflow.examples.tutorials.mnist import input_data
-    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+    from mnist import read_data_sets
+    mnist = read_data_sets("MNIST_data/", one_hot=True)
     print("Data extracted")
 
     #Running the session
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
     #training the model
-    for i in range(30000):
+    for i in range(40750):
       batch = mnist.train.next_batch(50)
       if i%100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
