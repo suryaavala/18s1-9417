@@ -1,0 +1,6 @@
+- 3 convs followed by max pooling after input:
+1. conv1: 32 features, 5x5 patch
+2. conv2: 64 features, 5x5 patch
+3. conv3: 128 features, 5x5 patch
+4. Densely Connected Layer: image size has been reduced to 4x4 + fully connected layer with 1024 neurons to allow processing on entire image.
+5. Readout layer: Softmax Regression on the Layer 4 to get probability of image classes (between 0-61)
