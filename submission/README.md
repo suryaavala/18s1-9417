@@ -69,7 +69,7 @@ Download data and models from [Google drive](https://drive.google.com/open?id=1f
 
 ### Data
 
-Unzip the data directory (from google drive) inside `code` and copy the data files inside `data/<mnist/emnist>` into `MNIST_data` directory depending on whether you are planning to run mnist (handwritten digits) or emnist (hand written digits plus alphabets).
+Copy the contents of `data/<mnist/emnist>` directory (from google drive) into `submission/code/MNIST_data` depending on whether you are planning to run mnist (handwritten digits) or emnist (hand written digits plus alphabets).
 
 You have to do copy the right data into `MNIST_data` everytime you are going to train the classifier. The data files for both mnist and emnist are named exactly the same.
 
@@ -80,7 +80,7 @@ t10k-images-idx3-ubyte.gz  t10k-labels-idx1-ubyte.gz  train-images-idx3-ubyte.gz
 
 ### Models
 
-Unzip the models directory (from google drive) inside `code` and copy the models into `model/` into dir.
+Copy the `model` directory (from google drive) inside `code` and replace `/submission/code/model/`.
 
 ```
 $ ls /submission/code/model/
