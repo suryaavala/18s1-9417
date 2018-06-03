@@ -63,18 +63,31 @@ If you see the above output, then the installation is successful
 
 The code can be run to either Train the classifier or to Predict the results using the pretrained classifier
 
-## Data
+## Data and Models
 
-Unzip the data directory inside code and copy the data files inside `data/<mnist/emnist>` into `MNIST_data` directory depending on whether you are planning to run mnist (handwritten digits) or emnist (hand written digits plus alphabets).
+Download data and models from [Google drive](https://drive.google.com/open?id=1fKhMOCI63-G4b6Cxkw3qif4N4ALMESLr)
+
+### Data
+
+Unzip the data directory (from google drive) inside `code` and copy the data files inside `data/<mnist/emnist>` into `MNIST_data` directory depending on whether you are planning to run mnist (handwritten digits) or emnist (hand written digits plus alphabets).
 
 You have to do copy the right data into `MNIST_data` everytime you are going to train the classifier. The data files for both mnist and emnist are named exactly the same.
 
 ```
-$ ls ../../code/MNIST_data/
+$ ls /submission/code/MNIST_data/
 t10k-images-idx3-ubyte.gz  t10k-labels-idx1-ubyte.gz  train-images-idx3-ubyte.gz train-labels-idx1-ubyte.gz
 ```
 
-### Train
+### Models
+
+Unzip the models directory (from google drive) inside `code` and copy the models into `model/` into dir.
+
+```
+$ ls /submission/code/model/
+emnist  mnist
+```
+
+## Train
 
 Make sure you copied the right(mnist/emnist whichever you are planning to run) data into `MNIST_data` dir.
 
@@ -92,9 +105,9 @@ python3 assignmetn.py train <mnist/emnist>
 
 The classifier takes around ~60min to run on a 1.7GHz Intel Dual Core i7 processor.
 
-### Test
+## Test
 
-Make sure you copied the right(mnist/emnist whichever you are planning to run) data into `MNIST_data` dir.
+Make sure you copied the right(mnist/emnist whichever you are planning to run) data into `MNIST_data` dir and models into `models` dir.
 
 Inorder to test the classifier run the following code
 
