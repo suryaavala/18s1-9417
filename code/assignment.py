@@ -136,18 +136,14 @@ if train:
             print('Total accuracy: {}'.format(
                 str(sum(accuracies)/len(accuracies))))
         train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.45})
-    for i in range(10):
-        testSet = mnist.test.next_batch(50)
-        print("test accuracy %g" % accuracy.eval(
-            feed_dict={x: testSet[0], y_: testSet[1], keep_prob: 1.0}))
     saver = tf.train.Saver()
-    save_path = saver.save(sess, "./model/model_62/model_2/model.ckpt")
+    save_path = saver.save(sess, "./model/model.ckpt")
     print("Model saved in file: %s" % save_path)
     sess.close()
 else:
     saver = tf.train.Saver()
     with tf.Session() as sess:
-        saver.restore(sess, "./model/model_62/model.ckpt")
+        saver.restore(sess, "./model/model.ckpt")
         print("Model restored")
         accuracies = []
         for i in range(2327):
